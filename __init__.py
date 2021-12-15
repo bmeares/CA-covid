@@ -9,6 +9,8 @@ Fetch county-level COVID-19 data from the state of California.
 from __future__ import annotations
 from meerschaum.utils.typing import Optional, Dict, Any
 from meerschaum.config._paths import PLUGINS_TEMP_RESOURCES_PATH
+__version__ = '0.1.0'
+import datetime
 import pathlib
 
 CSV_URL = "https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv"
@@ -95,6 +97,7 @@ def fetch(
     )
     begin = begin if begin is not None else pipe.get_sync_time(debug=debug)
     if begin is not None:
+        begin -= datetime.timedelta(days=2)
         query += f"\n    AND CAST(d.date AS DATE) >= CAST('{begin}' AS DATE)"
     if end is not None:
         query += f"\n    AND CAST(d.date AS DATE) <= CAST('{end}' AS DATE)"
